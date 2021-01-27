@@ -2,6 +2,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const generate = require('./utils/generateMarkdown');
+const { networkInterfaces } = require('os');
 
 //array of questions
 const questions =
@@ -38,6 +39,11 @@ const questions =
         },
         {
             type: 'input',
+            message: 'What does the user need to know about contributing to the repo?',
+            name: 'contribution',
+        },
+        {
+            type: 'input',
             message: 'Enter your Github username',
             name: 'username',
         },
@@ -48,18 +54,22 @@ const questions =
         },
     ];
 
-//promt user function
-inquirer
-    .prompt(questions)
-    .then((response) => writeToFile(response));
 
 //create Readme file function
 function writeToFile(fileName, data) {
-    fs.writeFile("testREADME.md", generate("data"), err => err
-        ? console.error(err)
-        : console.log("Success! Your ReadMe.md is being generated."));
 
+    return fs.writeFile(path.join(process.cwd), fileName, data)
 };
 
+//promt user function
+function createFile() {
+    inquirer
+        .prompt(questions)
+        .then((response) => {
+            console.log("Generate your readme now...");
+            writeToFile("Readme.MD", generate({ ...response }));
+        });
+}
 
 
+createFile();
